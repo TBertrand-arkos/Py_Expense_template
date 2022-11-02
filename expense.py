@@ -1,11 +1,13 @@
 from secrets import choice
 from PyInquirer import prompt
+import re
 
 expense_questions = [
     {
         "type":"input",
         "name":"amount",
         "message":"New Expense - Amount: ",
+        'validate': lambda x: bool(re.match(r'^[0-9]+$',x)) or "Please enter a valid amount"
     },
     {
         "type":"input",
