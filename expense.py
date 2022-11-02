@@ -1,3 +1,4 @@
+from secrets import choice
 from PyInquirer import prompt
 
 expense_questions = [
@@ -12,9 +13,21 @@ expense_questions = [
         "message":"New Expense - Label: ",
     },
     {
-        "type":"input",
+        "type":"list",
         "name":"spender",
         "message":"New Expense - Spender: ",
+        "choices":[
+            # choice.split(',',1)[0] for choice in open('users.csv').read().splitlines()
+            choice for choice in open('users.csv').read().splitlines()
+        ]
+    },
+    {
+        "type":"checkbox",
+        "name":"involved_users",
+        "message":"New Expense - Involved Users: ",
+        "choices":[
+            {"name": choice} for choice in open('users.csv').read().splitlines()
+        ]
     },
 
 ]
@@ -26,10 +39,16 @@ def new_expense(*args):
     # Writing the informations on external file might be a good idea ¯\_(ツ)_/¯
     amount = infos['amount']
     label = infos['label']
-    spender = infos['spender']
+    spender = infos['spender'].split(',',1)[0]
+    involved_users = infos['involved_users']
+    amount_per_user = float(amount) / (len(involved_users)+1)
     # put into csv file
-    with open('expense.csv', 'a') as f:
-        f.write(f'{amount},{label},{spender}')
+    with open('expenses.csv', 'a') as f:
+            f.write(f'spender,{spender},{str(amount_per_user)},{label}\n')
+    for user in involved_users:
+        user = user.split(',',1)[0]
+        with open('expenses.csv', 'a') as f:
+            f.write(f'involved,{user},{str(amount_per_user)},{label},{spender}\n')
     print("Expense Added !")
     return True
 
