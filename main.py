@@ -7,7 +7,7 @@ def ask_option():
         "type":"list",
         "name":"main_options",
         "message":"Expense Tracker v0.1",
-        "choices": ["New Expense","Show Status","New User"]
+        "choices": ["New Expense","Show Status","New User","Exit"],
     }
     option = prompt(main_option)
     if (option['main_options']) == "New Expense":
